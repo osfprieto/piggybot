@@ -8,9 +8,13 @@ They use 3/16" acrilic and 2/16" screw holes.
 
 Basic shape of the chasis
 
+## ChasisWithRoundCorners
+
+Basic shape with the rounded corners
+
 ## ChasisCommonHoles
 
-Chasis with added holes common to both the top and lower plates.
+ChasisWithRoundCorners with added holes common to both the top and lower plates.
 
 ## ChasisTop
 
