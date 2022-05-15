@@ -15,3 +15,8 @@ Updating the chasis and modifying the wheel layout, using two UNO R3 boards, in 
 ## Libraries
 
 [Elegoo libraries](https://www.elegoo.com/pages/arduino-kits-support-files)
+
+## IDE
+
+- VS Code with Microsoft Arduino extension.
+- Arduino IDE.
