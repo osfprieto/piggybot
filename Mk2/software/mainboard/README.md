@@ -7,6 +7,9 @@ This is the board that drives the four main engines as well as the consumes data
 Board: Elegoo UNO R3 from Smart Robot Kit v2 (2017)
 Driver: Arduino/Genuino UNO
 
+## Library requirements
+
+- Infrared comms - [IRRemote](https://www.arduino.cc/reference/en/libraries/irremote/)
 
 ## Deploying
 
