@@ -10,6 +10,8 @@ Driver: Arduino/Genuino UNO
 ## Library requirements
 
 - Infrared comms - [IRRemote](https://www.arduino.cc/reference/en/libraries/irremote/)
+  - Validated with version 3.6.1 (pending to update one deprecated function usage)
 
 ## Deploying
 
+From the Arduino IDE, deploy to the board.
