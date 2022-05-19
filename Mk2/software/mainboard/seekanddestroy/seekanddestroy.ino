@@ -3,9 +3,8 @@
 // If LT_ returns true it means it found a white stripe.
 // 0 for white, 1 elsewise
 
-#define LTL digitalRead(10) // Left
-#define LTC digitalRead(4) // Center
-#define LTR digitalRead(2) // Right
+#define LTL digitalRead(10) // Left - Tagged with label 2 - Port 3 in  Tracking module of the custom the board
+#define LTR digitalRead(2) // Right - Tagged with label 3 - Port 5 in  Tracking module of the custom the board
 
 // Infrared signal codes
 #define IRL 16720605 // Left
@@ -135,16 +134,15 @@ void _avoidTheLine()
 {
   _mBack();
   delay(200);
-  if(!LTC && LTR) // Touching the line with the left line tracker
-  // USE THE LTC because LTL is damaged
+  if(!LTL && LTR) // Touching the line with the left line tracke
   {
     _mRight();
-    while(!LTC);
+    while(!LTL);
     delay(200);
     _mForward();
     delay(400);
   }
-  else if (LTC && !LTR) // Touching the line with the right line tracker
+  else if (LTL && !LTR) // Touching the line with the right line tracker
   {
     _mLeft();
     while(!LTR);
@@ -199,7 +197,7 @@ void loop()
       _mForward();
       movingForward = true;
     }
-    else if (!LTC || !LTR)
+    else if (!LTL || !LTR)
     {
       movingForward = false;
       _avoidTheLine();
