@@ -17,9 +17,11 @@
 #define IR2 16750695 // number two
 #define IR3 16756815 // number three
 
-
+// Ultrasonic ports
 int Echo = A4;  
 int Trig = A5; 
+
+// Engine output
 int in1 = 6;
 int in2 = 7;
 int in3 = 8;
