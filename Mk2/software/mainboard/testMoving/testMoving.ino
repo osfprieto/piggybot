@@ -19,6 +19,45 @@ void _mForward()
   Serial.println("Ahead");
 }
 
+void _mBack()
+{
+  digitalWrite(ENA,HIGH);
+  digitalWrite(ENB,HIGH);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,HIGH);
+  digitalWrite(in3,HIGH);
+  digitalWrite(in4,LOW);
+  Serial.println("Back");
+}
+
+void _mLeft()
+{
+  digitalWrite(ENA,HIGH);
+  digitalWrite(ENB,HIGH);
+  digitalWrite(in1,HIGH);
+  digitalWrite(in2,LOW);
+  digitalWrite(in3,HIGH);
+  digitalWrite(in4,LOW);
+  Serial.println("Left");
+}
+
+void _mRight()
+{
+  digitalWrite(ENA,HIGH);
+  digitalWrite(ENB,HIGH);
+  digitalWrite(in1,LOW);
+  digitalWrite(in2,HIGH);
+  digitalWrite(in3,LOW);
+  digitalWrite(in4,HIGH);
+  Serial.println("Right");
+}
+
+void _mStop()
+{
+  digitalWrite(ENA,LOW);
+  digitalWrite(ENB,LOW);
+  Serial.println("Stop");
+}
 
 void setup() 
 {
@@ -29,10 +68,24 @@ void setup()
   pinMode(in4,OUTPUT);
   pinMode(ENA,OUTPUT);
   pinMode(ENB,OUTPUT);
-  _mForward();
 }
 
 void loop() 
 {
-  
+  _mForward();
+  delay(3000);
+  _mStop();
+  delay(1000);
+  _mBack();
+  delay(3000);
+  _mStop();
+  delay(1000);
+  _mRight();
+  delay(3000);
+  _mStop();
+  delay(1000);
+  _mLeft();
+  delay(3000);
+  _mStop();
+  delay(1000);
 }
