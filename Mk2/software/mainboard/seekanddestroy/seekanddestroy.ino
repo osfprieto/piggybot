@@ -6,6 +6,9 @@
 #define LTL digitalRead(10) // Left - Tagged with label 2 - Port 3 in  Tracking module of the custom the board
 #define LTR digitalRead(2) // Right - Tagged with label 3 - Port 5 in  Tracking module of the custom the board
 
+// For the motor driver module
+#define MAX_SPEED 255
+
 // Infrared signal codes
 #define IRL 16720605 // Left
 #define IRR 16761405 // Right
@@ -44,66 +47,62 @@ int distance = 0;
 int turnDirection = 0;
 bool movingForward = false;
 
-void _mForward()
+/**
+@speedLeft, @speedRight: [-255,255]
+value < 0: speed backwards
+value = 0: not moving
+value > 0: speed forward
+*/
+void _mMove(int speedLeft, int speedRight)
 {
+  int in1Value = speedRight > 0 ? speedRight : 0;
+  int in2Value = speedRight < 0 ? -speedRight : 0;
+  int in3Value = speedLeft < 0 ? -speedLeft : 0;
+  int in4Value = speedLeft > 0 ? speedLeft : 0;
+  
   digitalWrite(ENA,HIGH);
   digitalWrite(ENB,HIGH);
-  digitalWrite(in1,HIGH);//digital output
-  digitalWrite(in2,LOW);
-  digitalWrite(in3,LOW);
-  digitalWrite(in4,HIGH);
-  Serial.println("Ahead");
-}
-
-void _mBack()
-{
-  digitalWrite(ENA,HIGH);
-  digitalWrite(ENB,HIGH);
-  digitalWrite(in1,LOW);
-  digitalWrite(in2,HIGH);
-  digitalWrite(in3,HIGH);
-  digitalWrite(in4,LOW);
-  Serial.println("Back");
-}
-
-void _mLeft()
-{
-  digitalWrite(ENA,HIGH);
-  digitalWrite(ENB,HIGH);
-  digitalWrite(in1,HIGH);
-  digitalWrite(in2,LOW);
-  digitalWrite(in3,HIGH);
-  digitalWrite(in4,LOW);
-  Serial.println("Left");
-}
-
-void _mRight()
-{
-  digitalWrite(ENA,HIGH);
-  digitalWrite(ENB,HIGH);
-  digitalWrite(in1,LOW);
-  digitalWrite(in2,HIGH);
-  digitalWrite(in3,LOW);
-  digitalWrite(in4,HIGH);
-  Serial.println("Right");
+  analogWrite(in1,in1Value);
+  analogWrite(in2,in2Value);
+  analogWrite(in3,in3Value);
+  analogWrite(in4,in4Value);
 }
 
 void _mStop()
 {
   digitalWrite(ENA,LOW);
   digitalWrite(ENB,LOW);
-  Serial.println("Stop");
+}
+
+void _mForward()
+{
+  _mMove(MAX_SPEED, MAX_SPEED);
+}
+
+void _mBackward()
+{
+  _mMove(-MAX_SPEED, -MAX_SPEED);
+}
+
+void _mRotateLeft()
+{
+  _mMove(-MAX_SPEED, MAX_SPEED);
+}
+
+void _mRotateRight()
+{
+  _mMove(MAX_SPEED, -MAX_SPEED);
 }
 
 void _mTurn()
 {
   if(turnDirection==RIGHT)
   {
-    _mRight();
+    _mRotateRight();
   }
   else
   {
-    _mLeft();
+    _mRotateLeft();
   }
 }
 
@@ -134,11 +133,11 @@ int _measureDistance()
 
 void _avoidTheLine()
 {
-  _mBack();
+  _mBackward();
   delay(200);
   if(!LTL && LTR) // Touching the line with the left line tracke
   {
-    _mRight();
+    _mRotateRight();
     while(!LTL);
     delay(200);
     _mForward();
@@ -146,7 +145,7 @@ void _avoidTheLine()
   }
   else if (LTL && !LTR) // Touching the line with the right line tracker
   {
-    _mLeft();
+    _mRotateLeft();
     while(!LTR);
     delay(200);
     _mForward();
@@ -217,13 +216,13 @@ void loop()
     _mForward();
   }
   else if(IRSignal == IRB){
-    _mBack();
+    _mBackward();
   }
   else if(IRSignal == IRR){
-    _mRight();
+    _mRotateRight();
   }
   else if(IRSignal == IRL){
-    _mLeft();
+    _mRotateLeft();
   }
   else
   {
