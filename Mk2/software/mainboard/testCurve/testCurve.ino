@@ -50,7 +50,7 @@ void _mCurve(int vel, int dir, int radius, bool reverse)
   double slowSpeed = round(1.0 * vel - (1.0 * vel)/(1.0 + (1.0 * radius) / (1.0 * vel) )); // VEL - VEL/(1 + RADIUS/VEL)
   int speedLeft = dir == RIGHT ? vel : slowSpeed;
   int speedRight = dir == LEFT ? vel : slowSpeed;
-  _mMove(reverse ? -speedLeft : speedLeft, reverse ? speedRight : speedRight);
+  _mMove(reverse ? -speedLeft : speedLeft, reverse ? -speedRight : speedRight);
 }
 
 void setup() 

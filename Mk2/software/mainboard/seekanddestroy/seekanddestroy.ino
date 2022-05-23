@@ -20,6 +20,9 @@
 #define IR2 16750695 // number two
 #define IR3 16756815 // number three
 
+#define RIGHT 0
+#define LEFT 1
+
 // Ultrasonic ports
 int Echo = A4;  
 int Trig = A5; 
@@ -39,9 +42,6 @@ decode_results results;
 unsigned long IRSignal = IR1;
 
 int ATTACK_DISTANCE = 50;
-
-int RIGHT = 1;
-int LEFT = 2;
 
 int distance = 0;
 int turnDirection = 0;
@@ -67,6 +67,22 @@ void _mMove(int speedLeft, int speedRight)
   analogWrite(in3,in3Value);
   analogWrite(in4,in4Value);
 }
+
+/**
+ * Calculates the left and right speeds (in the same direction) so the car describes a curve with a given radius parameter
+ * vel: upper bound of the speeds.
+ * dir: 0 ir 1, defines right or left respectively
+ * radius: parameter to control how diverse are the lateral speeds
+ * reverse: true means the speeds will be given in negative form (going backwards).
+ */
+void _mCurve(int vel, int dir, int radius, bool reverse)
+{
+  double slowSpeed = round(1.0 * vel - (1.0 * vel)/(1.0 + (1.0 * radius) / (1.0 * vel) )); // VEL - VEL/(1 + RADIUS/VEL)
+  int speedLeft = dir == RIGHT ? vel : slowSpeed;
+  int speedRight = dir == LEFT ? vel : slowSpeed;
+  _mMove(reverse ? -speedLeft : speedLeft, reverse ? -speedRight : speedRight);
+}
+
 
 void _mStop()
 {
