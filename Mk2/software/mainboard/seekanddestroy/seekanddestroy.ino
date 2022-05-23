@@ -23,6 +23,8 @@
 #define RIGHT 0
 #define LEFT 1
 
+#define ATTACK_DISTANCE 50
+
 // Ultrasonic ports
 int Echo = A4;  
 int Trig = A5; 
@@ -40,8 +42,6 @@ int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
 decode_results results;
 unsigned long IRSignal = IR1;
-
-int ATTACK_DISTANCE = 50;
 
 int distance = 0;
 int turnDirection = 0;
