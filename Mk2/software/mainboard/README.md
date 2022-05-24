@@ -15,3 +15,7 @@ Driver: Arduino/Genuino UNO
 ## Deploying
 
 From the Arduino IDE, deploy to the board.
+
+## Free analog pins
+
+A0, A1, A2, A3
