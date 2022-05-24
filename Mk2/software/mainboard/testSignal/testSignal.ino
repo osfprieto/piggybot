@@ -6,12 +6,12 @@
 //
 // Another option is to just use one signal through the available digial ports or code through byte maps.
 
-void setup() 
+void setup()
 {
   Serial.begin(9600);
 }
 
-void loop() 
+void loop()
 {
   Serial.print(analogRead(A0));
   Serial.print("\t");
@@ -25,5 +25,4 @@ void loop()
   Serial.print("\t");
   Serial.print(analogRead(A5));
   Serial.println("");
-  delay(100);
 }
