@@ -1,19 +1,6 @@
 radio.onReceivedNumber(function (receivedNumber) {
-    basic.showLeds(`
-        # # # # #
-        # # # # #
-        # . # . #
-        # # # # #
-        # # # # #
-        `)
-    basic.showString("" + (receivedNumber))
-    basic.showLeds(`
-        # # # # #
-        # . # . #
-        # . # . #
-        # . # . #
-        # # # # #
-        `)
+    serial.writeNumber(receivedNumber)
+    serial.writeLine("")
 })
 function clearPins () {
     setPins(0, 0, 0)
@@ -28,10 +15,10 @@ function setPins (num: number, num2: number, num3: number) {
 }
 basic.showLeds(`
     # # # # #
-    # . # . #
-    # . # . #
-    # . # . #
-    # # # # #
+    . . # . .
+    . . # . .
+    . . # . .
+    . . # . .
     `)
 basic.forever(function () {
     radio.setGroup(92)
