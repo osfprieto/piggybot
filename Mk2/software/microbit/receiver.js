@@ -1,3 +1,20 @@
+radio.onReceivedNumber(function (receivedNumber) {
+    basic.showLeds(`
+        # # # # #
+        # # # # #
+        # . # . #
+        # # # # #
+        # # # # #
+        `)
+    basic.showString("raw " + receivedNumber)
+    basic.showLeds(`
+        # # # # #
+        # . # . #
+        # . # . #
+        # . # . #
+        # # # # #
+        `)
+})
 function clearPins () {
     setPins(0, 0, 0)
 }
@@ -10,13 +27,26 @@ function setPins (num: number, num2: number, num3: number) {
     pins.analogWritePin(AnalogPin.P2, num3)
 }
 radio.onReceivedValue(function (name, value) {
-    basic.showString(name)
-    basic.showString("" + (value))
     basic.showLeds(`
         # # # # #
         # # # # #
         # . # . #
         # # # # #
+        # # # # #
+        `)
+    if (name == "primary") {
+        setPins(1, 1, 1)
+    } else if (name == "secondary") {
+        setPins(1, 1, 1)
+    } else {
+        clearPins()
+    }
+    basic.showString("composed: " + name + ": " + value)
+    basic.showLeds(`
+        # # # # #
+        # . # . #
+        # . # . #
+        # . # . #
         # # # # #
         `)
 })
