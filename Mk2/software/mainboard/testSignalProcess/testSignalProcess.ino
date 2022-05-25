@@ -7,7 +7,7 @@
 // It'd be worth looking at using hardware instead to save the processing time.
 
 /**
- * Process the signal on a specific port and returns the
+ * Process the PWM signal on a specific port and returns the
  * percentage of HIGH found in the samples (between 0 and 1.0)
  */
 double processSignal()

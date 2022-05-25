@@ -2,7 +2,6 @@
 
 // If LT_ returns true it means it found a white stripe.
 // 0 for white, 1 elsewise
-
 #define LTL digitalRead(10) // Left - Tagged with label 2 - Port 3 in  Tracking module of the custom the board
 #define LTR digitalRead(2) // Right - Tagged with label 3 - Port 5 in  Tracking module of the custom the board
 
@@ -25,6 +24,12 @@
 
 #define ATTACK_DISTANCE 50
 
+// The higher the values, the better signal we get but the longer it takes.
+#define SIGNAL_SAMPLE_SIZE 1000
+// Sample of 1000 with rate of 50 gives us about +-9% variation in 50ms (0.05s)
+// Sample of 1000 with rate of 100 gives us about +-1% variation in 100ms (0.1s)
+#define SIGNAL_PROCESSING_RATE_MICROSECONDS 50
+
 // Ultrasonic ports
 int Echo = A4;  
 int Trig = A5; 
@@ -44,8 +49,32 @@ decode_results results;
 unsigned long IRSignal = IR1;
 
 int distance = 0;
-int turnDirection = 0;
+int turnDirection = RIGHT;
 bool movingForward = false;
+
+// Manual override through A0 port.
+double readSignal = 0.0;
+double projectedReadSignal = 0.0;
+bool charging = false;
+int preChargeSpeed = 0;
+
+/**
+ * Process the PWM signal on a specific port and returns the
+ * percentage of HIGH found in the samples (between 0 and 1.0)
+ */
+double _processSignal()
+{
+  int counter = 0;
+  for(int i = 0; i < SIGNAL_SAMPLE_SIZE; i++)
+  {
+    if(digitalRead(A0) == HIGH)
+    {
+      counter++;
+    }
+    delayMicroseconds(SIGNAL_PROCESSING_RATE_MICROSECONDS);
+  }
+  return (1.0*counter)/(1.0*SIGNAL_SAMPLE_SIZE);
+}
 
 /**
 @speedLeft, @speedRight: [-255,255]
@@ -189,6 +218,26 @@ void setup()
 
 void loop() 
 {
+  // TODO: Connect all the grounds together to clean up the signals.
+  // readSignal = _processSignal();
+  // Serial.println(readSignal);
+  // if(readSignal >= 0.1 && readSignal <0.9)
+  // {
+  //   charging = true;
+  //   // Transform the 0.1-0.9 space to 0.0-1.0. 
+  //   projectedReadSignal = (readSignal - 0.1)/0.8;
+  //   // Transform the 0.0-1.0 space to -255-255
+  //   preChargeSpeed = round(projectedReadSignal*512)-256;
+  //   _mMove(preChargeSpeed, -preChargeSpeed);
+  //   // Serial.println(preChargeSpeed);
+  // }
+  // else if (charging)
+  // {
+  //  _mForward();
+  //  delay(500);
+  //  charging = false;
+  // }
+  // else if(irrecv.decode(&results))
   if(irrecv.decode(&results))
   {
     if(results.value != IRH)
