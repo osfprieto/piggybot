@@ -1,14 +1,3 @@
-input.onButtonPressed(Button.AB, function () {
-    basic.showLeds(`
-        . . # . .
-        . # . # .
-        . # . # .
-        . # . # .
-        . . # . .
-        `)
-    radio.setGroup(92)
-    radio.sendNumber(0)
-})
 basic.showLeds(`
     . . . . .
     . . # . .
@@ -17,7 +6,19 @@ basic.showLeds(`
     . . . . .
     `)
 basic.forever(function () {
-    if (input.buttonIsPressed(Button.A)) {
+    if (input.buttonIsPressed(Button.AB)) {
+        basic.showLeds(`
+            . . # . .
+            . # . # .
+            . # . # .
+            . # . # .
+            . . # . .
+            `)
+        while (input.buttonIsPressed(Button.AB)) {
+            radio.setGroup(92)
+            radio.sendNumber(512)
+        }
+    } else if (input.buttonIsPressed(Button.A)) {
         basic.showLeds(`
             . # # . .
             . # . # .
@@ -27,7 +28,7 @@ basic.forever(function () {
             `)
         while (input.buttonIsPressed(Button.A)) {
             radio.setGroup(92)
-            radio.sendNumber(1000 + input.acceleration(Dimension.X))
+            radio.sendNumber(2048 + input.acceleration(Dimension.X))
         }
     } else if (input.buttonIsPressed(Button.B)) {
         basic.showLeds(`
@@ -39,7 +40,7 @@ basic.forever(function () {
             `)
         while (input.buttonIsPressed(Button.B)) {
             radio.setGroup(92)
-            radio.sendNumber(3000 + input.acceleration(Dimension.X))
+            radio.sendNumber(2048 + 2048 + input.acceleration(Dimension.Y))
         }
     }
     basic.showLeds(`

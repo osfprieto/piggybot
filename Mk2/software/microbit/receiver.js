@@ -6,18 +6,26 @@ radio.onReceivedNumber(function (receivedNumber) {
         # # # # #
         # # # # #
         `)
-    if (receivedNumber > 1000 && receivedNumber < 3000) {
-        integerValue = receivedNumber - 1000
-        if (integerValue > 1000) {
-            integerValue = 1000
+        p0 = 0
+        p1 = 0
+    if (receivedNumber > 1023 && receivedNumber < 1024 * 3) {
+        p0 = receivedNumber - 1024
+        if (p0 < 0) {
+            p0 = 0
         }
-        p0 = 1023 * integerValue / 1000
-    } else if (receivedNumber > 3000) {
-        integerValue2 = receivedNumber - 3000
-        if (integerValue2 > 1000) {
-            integerValue2 = 1000
+        if (p0 >= 1024 * 2) {
+            p0 = 1024 * 2 - 1
         }
-        p1 = 1023 * integerValue2 / 1000
+        p0 = p0 / 2
+    } else if (receivedNumber >= 1024 * 3) {
+        p1 = receivedNumber - 1024 * 3
+        if (p1 < 0) {
+            p1 = 0
+        }
+        if (p1 >= 1024 * 2) {
+            p1 = 1024 * 2 - 1
+        }
+        p1 = p1 / 2
     }
     setPins(p0, p1)
     basic.showLeds(`
@@ -28,20 +36,14 @@ radio.onReceivedNumber(function (receivedNumber) {
         # # # # #
         `)
 })
-function clearPins () {
-    setPins(0, 0)
-}
-input.onButtonPressed(Button.A, function () {
-    clearPins()
-})
-function setPins (p0: number, p1: number) {
+function setPins(p0: number, p1: number) {
     pins.analogWritePin(AnalogPin.P0, p0)
     pins.analogWritePin(AnalogPin.P1, p1)
 }
 let p1 = 0
-let integerValue2 = 0
 let p0 = 0
 let integerValue = 0
+let integerValue2 = 0
 basic.showLeds(`
     # # # # #
     # . # . #
