@@ -6,7 +6,8 @@ input.onButtonPressed(Button.AB, function () {
         . # . # .
         . . # . .
         `)
-    radio.sendValue("clear", 0)
+    radio.setGroup(92)
+    radio.sendNumber(4)
 })
 basic.showLeds(`
     . . . . .
@@ -16,7 +17,7 @@ basic.showLeds(`
     . . . . .
     `)
 basic.forever(function () {
-    while (input.buttonIsPressed(Button.A)) {
+    if (input.buttonIsPressed(Button.A)) {
         basic.showLeds(`
             . # # . .
             . # . # .
@@ -24,9 +25,11 @@ basic.forever(function () {
             . # . . .
             . # . . .
             `)
-        radio.sendValue("primary", 1)
-    }
-    while (input.buttonIsPressed(Button.B)) {
+        while (input.buttonIsPressed(Button.A)) {
+            radio.setGroup(92)
+            radio.sendNumber(2)
+        }
+    } else if (input.buttonIsPressed(Button.B)) {
         basic.showLeds(`
             . . # # .
             . # . . .
@@ -34,7 +37,10 @@ basic.forever(function () {
             . . . # .
             . # # . .
             `)
-        radio.sendValue("secondary", 0.5)
+        while (input.buttonIsPressed(Button.B)) {
+            radio.setGroup(92)
+            radio.sendNumber(3)
+        }
     }
     basic.showLeds(`
         . . . . .
