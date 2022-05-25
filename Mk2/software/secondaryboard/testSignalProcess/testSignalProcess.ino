@@ -8,7 +8,7 @@
 
 /**
  * Process the signal on a specific port and returns the
- * percentage of HIGH found in the samples.
+ * percentage of HIGH found in the samples (between 0 and 1.0)
  */
 double processSignal()
 {

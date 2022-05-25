@@ -1,4 +1,6 @@
 
+#define MAX_SPEED 255
+
 #define PIN_Motor_STBY 3
 #define PIN_Motor_PWMA 5
 #define PIN_Motor_AIN_1 7
@@ -10,9 +12,9 @@ void _move(){
   digitalWrite(PIN_Motor_STBY, HIGH);
 
   digitalWrite(PIN_Motor_AIN_1, LOW);
-  analogWrite(PIN_Motor_PWMA, 1023);
+  analogWrite(PIN_Motor_PWMA, MAX_SPEED);
   // digitalWrite(PIN_Motor_BIN_1, HIGH);
-  // analogWrite(PIN_Motor_PWMB, 100);
+  // analogWrite(PIN_Motor_PWMB, MAX_SPEED);
 }
 
 void _stop(){
