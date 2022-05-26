@@ -28,7 +28,7 @@
 #define SIGNAL_SAMPLE_SIZE 1000
 // Sample of 1000 with rate of 50 gives us about +-9% variation in 50ms (0.05s)
 // Sample of 1000 with rate of 100 gives us about +-1% variation in 100ms (0.1s)
-#define SIGNAL_PROCESSING_RATE_MICROSECONDS 50
+#define SIGNAL_PROCESSING_RATE_MICROSECONDS 100
 
 // Ultrasonic ports
 int Echo = A4;  
@@ -54,9 +54,7 @@ bool movingForward = false;
 
 // Manual override through A0 port.
 double readSignal = 0.0;
-double projectedReadSignal = 0.0;
 bool charging = false;
-int preChargeSpeed = 0;
 
 /**
  * Process the PWM signal on a specific port and returns the
@@ -218,27 +216,27 @@ void setup()
 
 void loop() 
 {
-  // TODO: Connect all the grounds together to clean up the signals.
-  // readSignal = _processSignal();
+  readSignal = _processSignal();
   // Serial.println(readSignal);
-  // if(readSignal >= 0.1 && readSignal <0.9)
-  // {
-  //   charging = true;
-  //   // Transform the 0.1-0.9 space to 0.0-1.0. 
-  //   projectedReadSignal = (readSignal - 0.1)/0.8;
-  //   // Transform the 0.0-1.0 space to -255-255
-  //   preChargeSpeed = round(projectedReadSignal*512)-256;
-  //   _mMove(preChargeSpeed, -preChargeSpeed);
-  //   // Serial.println(preChargeSpeed);
-  // }
-  // else if (charging)
-  // {
-  //  _mForward();
-  //  delay(500);
-  //  charging = false;
-  // }
-  // else if(irrecv.decode(&results))
-  if(irrecv.decode(&results))
+  if(readSignal >= 0.1 && readSignal <0.9)
+  {
+    charging = true;
+    if(readSignal > 0.45 && readSignal < 0.55)
+    {
+      _mStop();
+    }
+    else 
+    {
+      _mMove(readSignal > 0.5 ? MAX_SPEED : -MAX_SPEED, readSignal > 0.5 ? -MAX_SPEED : MAX_SPEED);
+    }
+  }
+  else if (charging)
+  {
+   _mForward();
+   delay(500);
+   charging = false;
+  }
+  else if(irrecv.decode(&results))
   {
     if(results.value != IRH)
     {

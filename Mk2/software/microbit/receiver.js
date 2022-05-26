@@ -27,8 +27,8 @@ radio.onReceivedNumber(function (receivedNumber) {
         }
         p1 = p1 / 2
     }
-    serial.writeNumber(p0)
-    serial.writeLine("")
+    // serial.writeNumber(p0)
+    // serial.writeLine("")
     setPins(p0, p1)
     basic.showLeds(`
         # # # # #
