@@ -24,12 +24,6 @@
 
 #define ATTACK_DISTANCE 50
 
-// The higher the values, the better signal we get but the longer it takes.
-#define SIGNAL_SAMPLE_SIZE 1000
-// Sample of 1000 with rate of 50 gives us about +-9% variation in 50ms (0.05s)
-// Sample of 1000 with rate of 100 gives us about +-1% variation in 100ms (0.1s)
-#define SIGNAL_PROCESSING_RATE_MICROSECONDS 100
-
 // Ultrasonic ports
 int Echo = A4;  
 int Trig = A5; 
@@ -53,26 +47,8 @@ int turnDirection = RIGHT;
 bool movingForward = false;
 
 // Manual override through A0 port.
-double readSignal = 0.0;
+int readSignal = 0;
 bool charging = false;
-
-/**
- * Process the PWM signal on a specific port and returns the
- * percentage of HIGH found in the samples (between 0 and 1.0)
- */
-double _processSignal()
-{
-  int counter = 0;
-  for(int i = 0; i < SIGNAL_SAMPLE_SIZE; i++)
-  {
-    if(digitalRead(A0) == HIGH)
-    {
-      counter++;
-    }
-    delayMicroseconds(SIGNAL_PROCESSING_RATE_MICROSECONDS);
-  }
-  return (1.0*counter)/(1.0*SIGNAL_SAMPLE_SIZE);
-}
 
 /**
 @speedLeft, @speedRight: [-255,255]
@@ -195,7 +171,7 @@ void _avoidTheLine()
     delay(400);
   }
   
-  Serial.println("Avoid");
+  // Serial.println("Avoid");
 }
 
 void setup() 
@@ -216,18 +192,20 @@ void setup()
 
 void loop() 
 {
-  readSignal = _processSignal();
+  // The A0 port receives 0-3.3V of energy, we expect a signal ranging from int 0 through 667.
+  // 250 is a good measure for the center  
+  readSignal = analogRead(A0);
   // Serial.println(readSignal);
-  if(readSignal >= 0.1 && readSignal <0.9)
+  if(readSignal > 99)
   {
     charging = true;
-    if(readSignal > 0.45 && readSignal < 0.55)
+    if(readSignal > 200 && readSignal < 300)
     {
       _mStop();
     }
-    else 
+    else
     {
-      _mMove(readSignal > 0.5 ? MAX_SPEED : -MAX_SPEED, readSignal > 0.5 ? -MAX_SPEED : MAX_SPEED);
+      _mMove(readSignal > 250 ? MAX_SPEED : -MAX_SPEED, readSignal > 250 ? -MAX_SPEED : MAX_SPEED);
     }
   }
   else if (charging)
@@ -243,7 +221,7 @@ void loop()
       IRSignal = results.value;
     }
     irrecv.resume();
-    Serial.println(IRSignal);
+    // Serial.println(IRSignal);
   }
   else if (IRSignal == IR1)
   {
