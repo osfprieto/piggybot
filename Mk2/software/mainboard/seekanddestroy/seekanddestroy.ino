@@ -23,10 +23,11 @@
 #define LEFT 1
 
 #define ATTACK_DISTANCE 50
+#define CHASE_DISTANCE 5
 
 // Ultrasonic ports
-int Echo = A4;  
-int Trig = A5; 
+int Echo = A4;
+int Trig = A5;
 
 // Engine output
 int in1 = 6;
@@ -62,7 +63,7 @@ void _mMove(int speedLeft, int speedRight)
   int in2Value = speedRight < 0 ? -speedRight : 0;
   int in3Value = speedLeft < 0 ? -speedLeft : 0;
   int in4Value = speedLeft > 0 ? speedLeft : 0;
-  
+
   digitalWrite(ENA,HIGH);
   digitalWrite(ENB,HIGH);
   analogWrite(in1,in1Value);
@@ -138,16 +139,35 @@ void _switchDirection()
 }
 
  /*Ultrasonic distance measurement Sub function*/
-int _measureDistance()   
+int _measureDistance()
 {
-  digitalWrite(Trig, LOW);   
+  digitalWrite(Trig, LOW);
   delayMicroseconds(2);
-  digitalWrite(Trig, HIGH);  
+  digitalWrite(Trig, HIGH);
   delayMicroseconds(20);
-  digitalWrite(Trig, LOW);   
-  float Fdistance = pulseIn(Echo, HIGH);  
-  Fdistance= Fdistance/58;       
+  digitalWrite(Trig, LOW);
+  float Fdistance = pulseIn(Echo, HIGH);
+  Fdistance= Fdistance/58;
   return (int)Fdistance;
+}
+
+void _avoidTheLineAndAttack(bool leftTrackerTouchingLine, bool rightTrackerTouchingLine){
+   if (leftTrackerTouchingLine){
+     _mRotateRight();
+     delay(200);
+     // curve backward left
+     _mCurve(MAX_SPEED,/*Left*/ 1, /*Radious ?*/5, true);
+
+   }
+   else if (rightTrackerTouchingLine){
+     _mRotateLeft();
+     delay(200);
+     // curve backward right
+     _mCurve(MAX_SPEED,/*Right*/ 0, /*Radious ?*/5, true);
+   }
+   // Test delay duration
+   delay(500);
+   _mStop();
 }
 
 void _avoidTheLine()
@@ -170,16 +190,16 @@ void _avoidTheLine()
     _mForward();
     delay(400);
   }
-  
+
   // Serial.println("Avoid");
 }
 
-void setup() 
+void setup()
 {
   Serial.begin(9600);
   irrecv.enableIRIn(); // Start the receiver
-  pinMode(Echo, INPUT);    
-  pinMode(Trig, OUTPUT);  
+  pinMode(Echo, INPUT);
+  pinMode(Trig, OUTPUT);
   pinMode(in1,OUTPUT);
   pinMode(in2,OUTPUT);
   pinMode(in3,OUTPUT);
@@ -190,10 +210,36 @@ void setup()
   turnDirection = random(1,3);
 }
 
-void loop() 
+void _mAttack(){
+  if(!movingForward)
+  {
+    _switchDirection();
+    _mTurn(); // When we start moving forward we come back a bit on the other direction to compensate for the momentum we had while rotating
+    delay(10);
+    //_mStop();
+  }
+
+  _mForward();
+    movingForward = true;
+}
+
+void _mChaseOnly(){
+  if(distance <= ATTACK_DISTANCE)
+  {
+    if (distance >= CHASE_DISTANCE){
+      _mAttack();
+    }
+    else {
+      _mStop();
+      movingForward = false;
+    }
+  }
+}
+
+void loop()
 {
   // The A0 port receives 0-3.3V of energy, we expect a signal ranging from int 0 through 667.
-  // 250 is a good measure for the center  
+  // 250 is a good measure for the center
   readSignal = analogRead(A0);
   // Serial.println(readSignal);
   if(readSignal > 99)
@@ -226,23 +272,16 @@ void loop()
   else if (IRSignal == IR1)
   {
     distance = _measureDistance();
-    
+
     if(distance<=ATTACK_DISTANCE)
     {
-      if(!movingForward)
-      {
-        _switchDirection();
-        _mTurn(); // When we start moving forward we come back a bit on the other direction to compensate for the momentum we had while rotating
-        delay(10);
-        //_mStop();
-      }
-      _mForward();
-      movingForward = true;
+      _mAttack();
     }
     else if (!LTL || !LTR)
     {
       movingForward = false;
-      _avoidTheLine();
+      //_avoidTheLine();
+      _avoidTheLineAndAttack(!LTL, !LTR);
     }
     else
     {
