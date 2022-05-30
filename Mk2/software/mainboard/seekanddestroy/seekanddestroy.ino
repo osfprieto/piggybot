@@ -2,6 +2,7 @@
 
 // If LT_ returns true it means it found a white stripe.
 // 0 for white, 1 elsewise
+// TEST THIS ON THE SCENE!!!
 #define LTL digitalRead(10) // Left - Tagged with label 2 - Port 3 in  Tracking module of the custom the board
 #define LTR digitalRead(2) // Right - Tagged with label 3 - Port 5 in  Tracking module of the custom the board
 
@@ -18,6 +19,9 @@
 #define IR1 16738455 // number one
 #define IR2 16750695 // number two
 #define IR3 16756815 // number three
+#define IR4 16724175 // number four
+#define IR5 16718055 // number five
+#define IR6 16743045 // number six
 
 #define RIGHT 0
 #define LEFT 1
@@ -132,6 +136,24 @@ void _mTurn()
   }
 }
 
+/**
+ * Tries to get out of the way so the other bot takes itself out of the ring.
+ */
+void _jiuJitsu(int dir)
+{
+  if(dir == LEFT)
+  {
+    _mRotateRight();
+  }
+  else
+  {
+    _mRotateLeft();
+  }
+  delay(200);
+  _mCurve(MAX_SPEED, dir, /* radious */ 200, /* reverse */ true); // TEST THIS ON THE SCENE!!!
+  delay(2500);
+}
+
 void _switchDirection()
 {
   if(turnDirection==RIGHT)
@@ -145,7 +167,7 @@ void _switchDirection()
 }
 
  /*Ultrasonic distance measurement Sub function*/
-int _measureDistance()
+int _measureDistance() // TEST THIS ON THE SCENE!!!
 {
   digitalWrite(Trig, LOW);
   delayMicroseconds(2);
@@ -316,6 +338,13 @@ void loop()
   }
   else if(IRSignal == IRL){
     _mRotateLeft();
+  }
+  else if(IRSignal == IR4){
+    _jiuJitsu(LEFT);
+    IRSignal = IR1;
+  }
+  else if(IRSignal == IR6){
+    _jiuJitsu(RIGHT);
   }
   else
   {

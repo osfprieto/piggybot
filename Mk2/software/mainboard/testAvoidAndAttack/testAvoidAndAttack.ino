@@ -92,12 +92,12 @@ void _avoidTheLineAndAttack(bool leftTrackerTouchingLine, bool rightTrackerTouch
   if (leftTrackerTouchingLine){
     _mRotateLeft();
     delay(400);
-    _mCurve(MAX_SPEED, RIGHT, /* radious */ 175, /* reverse */ true);
+    _mCurve(MAX_SPEED, RIGHT, /* radious */ 200, /* reverse */ true);
   }
   else if (rightTrackerTouchingLine){
     _mRotateRight();
     delay(400);
-    _mCurve(MAX_SPEED, LEFT, /* radious */ 175, /* reverse */ true);
+    _mCurve(MAX_SPEED, LEFT, /* radious */ 200, /* reverse */ true);
   }
   delay(1500);
 }

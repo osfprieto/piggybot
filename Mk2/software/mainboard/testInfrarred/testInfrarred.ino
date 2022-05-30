@@ -10,6 +10,9 @@
 #define IR1 16738455 // number one
 #define IR2 16750695 // number two
 #define IR3 16756815 // number three
+#define IR4 16724175 // number four
+#define IR5 16718055 // number five
+#define IR6 16743045 // number six
 
 int RECV_PIN = 12;
 IRrecv irrecv(RECV_PIN);
