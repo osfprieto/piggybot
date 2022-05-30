@@ -179,6 +179,9 @@ int _measureDistance() // TEST THIS ON THE SCENE!!!
   return (int)Fdistance;
 }
 
+/**
+ * @deprecated
+ */
 void _avoidTheLineAndAttack(bool leftTrackerTouchingLine, bool rightTrackerTouchingLine){
    if (leftTrackerTouchingLine){
      _mRotateRight();
@@ -267,6 +270,56 @@ void _mChaseOnly(){
   }
 }
 
+unsigned long trackingTimeStart = 0;
+void _trackLineBackwardsAndGoToCenter(int timeToTrack, int side)
+{
+  trackingTimeStart = millis();
+
+  if(side == LEFT)
+  {
+    _mRotateLeft();
+    delay(200);
+  }
+  else if(side == RIGHT)
+  {
+    _mRotateRight();
+    delay(200);
+  }
+
+  // Track the line
+  while(millis() - trackingTimeStart < timeToTrack)
+  {
+    if(side == LEFT && !LTL)
+    {
+      _mRotateLeft();
+      delay(50);
+    }
+    else if(side == RIGHT && !LTR)
+    {
+      _mRotateRight();
+      delay(50);
+    }
+    _mBackward();
+    delay(10);
+  }
+  
+  // Reset the timer.
+  trackingTimeStart = 0;
+
+  // Now, let's look for the center.
+  if(side == LEFT)
+  {
+    _mRotateRight();
+  }
+  else if(side == RIGHT && !LTR)
+  {
+    _mRotateRight();
+  }
+  delay(200);
+  _mForward();
+  delay(800);
+}
+
 void loop()
 {
   // The A0 port receives 0-3.3V of energy, we expect a signal ranging from int 0 through 667.
@@ -310,13 +363,12 @@ void loop()
       _mAttack();
       // Serial.println("Attacking");
     }
-    // else if (!LTL || !LTR)
-    // {
-    //   movingForward = false;
-    //   //_avoidTheLine();
-    //   _avoidTheLineAndAttack(!LTL, !LTR);
-    //   // Serial.println("Avoid");
-    // }
+    else if (!LTL || !LTR)
+    {
+      movingForward = false;
+      _trackLineBackwardsAndGoToCenter(/* timeToTrack */ 1500, !LTL ? LEFT : RIGHT);
+      // Serial.println("Trackers");
+    }
     else
     {
       movingForward = false;
@@ -345,6 +397,7 @@ void loop()
   }
   else if(IRSignal == IR6){
     _jiuJitsu(RIGHT);
+    IRSignal = IR1;
   }
   else
   {
