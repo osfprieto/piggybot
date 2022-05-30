@@ -156,20 +156,23 @@ void _avoidTheLineAndAttack(bool leftTrackerTouchingLine, bool rightTrackerTouch
      _mRotateRight();
      delay(200);
      // curve backward left
-     _mCurve(MAX_SPEED,/*Left*/ 1, /*Radious ?*/5, true);
+     _mCurve(MAX_SPEED, LEFT, /* radious */ 5, /* reverse */ true);
 
    }
    else if (rightTrackerTouchingLine){
      _mRotateLeft();
      delay(200);
      // curve backward right
-     _mCurve(MAX_SPEED,/*Right*/ 0, /*Radious ?*/5, true);
+     _mCurve(MAX_SPEED, RIGHT, /* radious */5, /* reverse */ true);
    }
    // Test delay duration
    delay(500);
    _mStop();
 }
 
+/**
+ * @deprecated
+ */
 void _avoidTheLine()
 {
   _mBackward();
@@ -218,9 +221,9 @@ void _mAttack(){
     delay(10);
     //_mStop();
   }
-
+  
   _mForward();
-    movingForward = true;
+  movingForward = true;
 }
 
 void _mChaseOnly(){
