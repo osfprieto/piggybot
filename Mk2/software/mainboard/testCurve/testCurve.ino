@@ -47,7 +47,13 @@ void _mStop()
  */
 void _mCurve(int vel, int dir, int radius, bool reverse)
 {
-  double slowSpeed = round(1.0 * vel - (1.0 * vel)/(1.0 + (1.0 * radius) / (1.0 * vel) )); // VEL - VEL/(1 + RADIUS/VEL)
+  // VEL - VEL/(1 + RADIUS/VEL)
+  // R=50 -> 34 pulgadas diametro
+  // R=100 -> 45 pulgadas diametro
+  // R=200 -> 79 pulgadas diametro
+  // R=400 -> 124 pulgadas diametro
+  // R=800 -> 172 pulgadas diametro
+  double slowSpeed = round(1.0 * vel - (1.0 * vel)/(1.0 + (1.0 * radius) / (1.0 * vel) )); // VEL - VEL/(1 + RADIUS/VEL) // Radius 100 here nos da 45 pulgadas de diametro.
   int speedLeft = dir == RIGHT ? vel : slowSpeed;
   int speedRight = dir == LEFT ? vel : slowSpeed;
   _mMove(reverse ? -speedLeft : speedLeft, reverse ? -speedRight : speedRight);
@@ -62,6 +68,7 @@ void setup()
   pinMode(in4,OUTPUT);
   pinMode(ENA,OUTPUT);
   pinMode(ENB,OUTPUT);
+  // _mCurve(MAX_SPEED, RIGHT, /* radious */ 800, /* reverse */ false);
 }
 
 void loop()
