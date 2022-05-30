@@ -288,13 +288,13 @@ void loop()
       _mAttack();
       // Serial.println("Attacking");
     }
-    else if (!LTL || !LTR)
-    {
-      movingForward = false;
-      //_avoidTheLine();
-      _avoidTheLineAndAttack(!LTL, !LTR);
-      // Serial.println("Avoid");
-    }
+    // else if (!LTL || !LTR)
+    // {
+    //   movingForward = false;
+    //   //_avoidTheLine();
+    //   _avoidTheLineAndAttack(!LTL, !LTR);
+    //   // Serial.println("Avoid");
+    // }
     else
     {
       movingForward = false;
