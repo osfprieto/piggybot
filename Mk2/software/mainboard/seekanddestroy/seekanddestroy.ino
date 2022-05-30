@@ -195,7 +195,6 @@ void loop()
   // The A0 port receives 0-3.3V of energy, we expect a signal ranging from int 0 through 667.
   // 250 is a good measure for the center  
   readSignal = analogRead(A0);
-  // Serial.println(readSignal);
   if(readSignal > 99)
   {
     charging = true;
@@ -207,12 +206,14 @@ void loop()
     {
       _mMove(readSignal > 250 ? MAX_SPEED : -MAX_SPEED, readSignal > 250 ? -MAX_SPEED : MAX_SPEED);
     }
+    // Serial.println("receiving signal");
   }
   else if (charging)
   {
-   _mForward();
-   delay(500);
-   charging = false;
+    _mForward();
+    delay(500);
+    charging = false;
+    // Serial.println("charge");
   }
   else if(irrecv.decode(&results))
   {
@@ -238,16 +239,19 @@ void loop()
       }
       _mForward();
       movingForward = true;
+      //Serial.println("Attacking");
     }
     else if (!LTL || !LTR)
     {
       movingForward = false;
       _avoidTheLine();
+      // Serial.println("Avoid");
     }
     else
     {
       movingForward = false;
       _mTurn();
+      // Serial.println("Turn");
     }
   }
   else if(IRSignal == IRS){
