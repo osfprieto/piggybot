@@ -18,4 +18,4 @@ From the Arduino IDE, deploy to the board.
 
 ## Free analog pins
 
-A0, A1, A2, A3
+A0 (using it to receive signals from the Microbit board), A1, A2, A3
