@@ -137,6 +137,37 @@ void _mTurn()
 }
 
 /**
+ * Tries to get out of the way so the other bot takes itself out of the ring, and performs a counterattack
+ */
+void _jiuJitsuReloaded(int dir)
+{
+  if(dir == LEFT)
+  {
+    _mRotateRight();
+  }
+  else
+  {
+    _mRotateLeft();
+  }
+  delay(200);
+  _mCurve(MAX_SPEED, dir, /* radious */ 200, /* reverse */ true); // TEST THIS ON THE SCENE!!!
+  delay(700);
+  _mBackward();
+  delay(700);  
+  if(dir == LEFT)
+  {
+    _mRotateLeft();
+  }
+  else
+  {
+    _mRotateRight();
+  }
+  delay(100);
+  _mForward();
+  delay(500);
+}
+
+/**
  * Tries to get out of the way so the other bot takes itself out of the ring.
  */
 void _jiuJitsu(int dir)
@@ -393,10 +424,12 @@ void loop()
   }
   else if(IRSignal == IR4){
     _jiuJitsu(LEFT);
+    //_jiuJitsuReloaded(LEFT);
     IRSignal = IR1;
   }
   else if(IRSignal == IR6){
     _jiuJitsu(RIGHT);
+    //_jiuJitsuReloaded(RIGHT);
     IRSignal = IR1;
   }
   else
